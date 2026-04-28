@@ -1,0 +1,539 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ScreenList</title>
+
+<!-- PWA / Icons / Social sharing -->
+<meta name="description" content="Track your shows, movies, and games.">
+<meta name="theme-color" content="#050410">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ScreenList">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<meta property="og:title" content="ScreenList">
+<meta property="og:description" content="Track your shows, movies, and games.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://watchlist.koomgaming.workers.dev/">
+<meta property="og:image" content="https://watchlist.koomgaming.workers.dev/og-image-v2.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ScreenList — Track your shows, movies, and games.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ScreenList">
+<meta name="twitter:description" content="Track your shows, movies, and games.">
+<meta name="twitter:image" content="https://watchlist.koomgaming.workers.dev/og-image-v2.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Live registered user counter (visible on every page) -->
+<div id="site-top-counters" style="display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;padding:6px 0 7px;pointer-events:none;font-family:inherit;white-space:nowrap;">
+  <div id="user-counter" style="display:block;width:100%;text-align:center;font-size:12px;line-height:1;color:#a78bfa;">280 REGISTERED USERS</div>
+</div>
+
+<!-- Login screen -->
+<div id="login-screen" class="login-screen">
+  <div class="login-hero">
+    <div style="display:flex;align-items:center;margin-bottom:0;">
+      <img src="Logo.png" alt="ScreenList" style="width:min(600px,95vw);height:auto;display:block;mix-blend-mode:screen;">
+    </div>
+    <div class="login-tagline">Track shows, movies, and games — with ratings, progress, comments, and friends.</div>
+  </div>
+
+  <div class="login-features">
+    <div class="login-feature">
+      <div class="login-feature-icon">📺</div>
+      <div class="login-feature-title">Track Everything</div>
+      <div class="login-feature-desc">Shows, movies, games, episodes, and progress.</div>
+    </div>
+    <div class="login-feature">
+      <div class="login-feature-icon">⭐</div>
+      <div class="login-feature-title">Rate & Discuss</div>
+      <div class="login-feature-desc">Rate titles, seasons, episodes, and comment with friends or globally.</div>
+    </div>
+    <div class="login-feature">
+      <div class="login-feature-icon">👥</div>
+      <div class="login-feature-title">Discover With Friends</div>
+      <div class="login-feature-desc">Add friends, compare lists, and find what to watch next.</div>
+    </div>
+  </div>
+
+  <div class="login-cta">
+    <div class="login-cta-label">Get started in seconds</div>
+    <div class="login-cta-buttons">
+      <button class="google-btn" onclick="signIn()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
+        Sign in with Google
+      </button>
+      <button class="google-btn preview-try-btn" onclick="startPreviewFromLanding()">Try Preview Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main app (hidden until logged in) -->
+<div id="app-container" style="display:none">
+<div class="preview-banner" id="preview-banner">
+  <div class="preview-banner-inner">
+    <div class="preview-banner-title">PREVIEW MODE</div>
+    <div class="preview-banner-copy">
+      <div>- This is so you can see how the website works and looks.</div>
+      <div>- Anything added or rated <strong>WILL NOT BE SAVED</strong>.</div>
+      <div>- The nature of the website to have your lists, and tracking, comments and everything saved, logging in is required.</div>
+      <div>- My username is King Kooom Please feel free to add me and my profile will be the only public profile as we build out the community</div>
+    </div>
+  </div>
+</div>
+<div class="header">
+  <div class="container">
+    <div class="header-top">
+      <div>
+        <div>
+          <div style="display:flex;align-items:center;">
+            <img src="Logo.png" alt="ScreenList" style="width:min(260px,60vw);height:auto;display:block;mix-blend-mode:screen;">
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+
+        <div class="user-area">
+          <button class="edit-profile-btn" onclick="openProfile()">Edit Profile</button>
+          <img class="user-avatar" id="user-avatar" src="" alt="" onclick="openProfile()" title="Edit profile">
+          <button class="logout-btn" onclick="signOut()">Log out</button>
+        </div>
+      </div>
+    </div>
+    <div class="main-nav">
+      <button class="main-nav-btn" id="nav-games-discover" onclick="switchMainNav('games-discover')">Games Discovery</button>
+      <button class="main-nav-btn" id="nav-discover" onclick="switchMainNav('discover')">Discovery</button>
+      <button class="main-nav-btn" id="nav-community" onclick="switchMainNav('community')">Friends</button>
+      <button class="main-nav-btn active" id="nav-mylist" onclick="switchMainNav('mylist')">My Lists</button>
+    </div>
+    <div id="mylist-header">
+    <div class="section-toggle">
+      <button class="section-btn" data-section="games" onclick="switchSection('games')">Games (<span id="games-count">0</span>)</button>
+      <button class="section-btn" data-section="anime" onclick="switchSection('anime')">Anime (<span id="anime-count">0</span>)</button>
+      <button class="section-btn" data-section="movies" onclick="switchSection('movies')">Movies (<span id="movies-count">0</span>)</button>
+      <button class="section-btn active" data-section="shows" onclick="switchSection('shows')">TV Shows (<span id="shows-count">0</span>)</button>
+    </div>
+    </div> <!-- end mylist-header -->
+  </div>
+</div>
+
+<div id="mylist-view">
+<div class="container main-content">
+  <div id="viewing-banner-area"></div>
+  <div class="toolbar" id="mylist-toolbar">
+    <div class="tabs">
+      <button class="tab-btn" data-tab="live" onclick="switchTab('live')" style="display:none">Live Games<span class="tab-count" id="count-live">0</span></button>
+      <button class="tab-btn active" data-tab="watching" onclick="switchTab('watching')">Watching<span class="tab-count" id="count-watching">0</span></button>
+      <button class="tab-btn" data-tab="planned" onclick="switchTab('planned')">Plan to Watch<span class="tab-count" id="count-planned">0</span></button>
+      <button class="tab-btn" data-tab="watched" onclick="switchTab('watched')">Watched<span class="tab-count" id="count-watched">0</span></button>
+      <button class="tab-btn" data-tab="paused" onclick="switchTab('paused')">Paused<span class="tab-count" id="count-paused">0</span></button>
+      <button class="tab-btn" data-tab="dropped" onclick="switchTab('dropped')">Dropped<span class="tab-count" id="count-dropped">0</span></button>
+    </div>
+    <div class="toolbar-right">
+      <input type="text" class="search-input" placeholder="search YOUR LIRBRARY" oninput="onSearch(this.value)">
+      <button class="btn-primary" id="add-btn" onclick="openModal()">+ Add Show</button>
+    </div>
+  </div>
+  <div class="grid" id="cards-grid"></div>
+  <div class="empty" id="empty-state" style="display:none">
+    <div class="empty-icon" id="empty-icon">📺</div>
+    <p id="empty-text">No watching shows yet</p>
+    <p class="empty-sub">Click the button above to add one</p>
+    <button class="btn-primary empty-cta" id="empty-cta" onclick="openModal()">Add your first title</button>
+  </div>
+</div>
+</div>
+
+<div id="community-view" style="display:none">
+<div class="container main-content">
+  <div class="friends-tabs">
+    <button class="friends-tab-btn active" id="ftab-friends" onclick="switchFriendsTab('friends')">My Friends <span id="friends-count-badge" style="font-size:11px;color:#7a6f99;margin-left:4px;"></span></button>
+    <button class="friends-tab-btn" id="ftab-requests" onclick="switchFriendsTab('requests')">Requests <span id="requests-count-badge" class="requests-badge" style="display:none;"></span></button>
+    <button class="friends-tab-btn" id="ftab-find" onclick="switchFriendsTab('find')">Search User</button>
+  </div>
+
+  <!-- My Friends -->
+  <div id="friends-list-view">
+    <div class="community-grid" id="friends-grid">
+      <div class="skeleton-card"></div>
+    </div>
+  </div>
+
+  <!-- Requests -->
+  <div id="requests-view" style="display:none">
+    <div id="incoming-section">
+      <h3 style="font-size:13px;color:#9990b3;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Incoming</h3>
+      <div class="community-grid" id="incoming-grid"></div>
+    </div>
+    <div id="outgoing-section" style="margin-top:24px;">
+      <h3 style="font-size:13px;color:#9990b3;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Sent</h3>
+      <div class="community-grid" id="outgoing-grid"></div>
+    </div>
+  </div>
+
+  <!-- Find People -->
+<div id="find-people-view" style="display:none">
+    <input type="text" class="find-search" placeholder="Search by username..." oninput="filterPeople(this.value)" style="padding:8px 12px;background:#0c0a1d;border:1px solid #2a2248;border-radius:4px;color:#e8e3f3;font-size:13px;outline:none;font-family:'DM Sans',sans-serif;">
+    <div class="community-grid" id="all-users-grid">
+      <div class="skeleton-card"></div>
+    </div>
+</div>
+</div>
+</div>
+
+
+<div id="discover-view" style="display:none">
+<div class="container main-content">
+  <div class="discover-head">
+    <div>
+      <div class="discover-title">Discover</div>
+      <div class="discover-subtitle">Trending movies, TV shows, and popular streaming picks</div>
+    </div>
+    <button class="btn-secondary btn-sm" onclick="loadDiscover(true)">Refresh</button>
+  </div>
+
+  <div class="discover-search-row">
+    <input class="discover-search-input" id="discover-search-input" type="text" placeholder="Search for Movies and TV Shows" onkeydown="handleDiscoverSearchKey(event, 'tmdb')">
+    <button class="btn-primary btn-sm" onclick="searchDiscoverDatabase()">Search</button>
+    <button class="btn-secondary btn-sm" onclick="clearDiscoverDatabaseSearch('tmdb')">Clear</button>
+  </div>
+
+  <div class="discover-section discover-search-section" id="discover-search-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Search Results</div>
+    </div>
+    <div class="discover-section-desc">Pulled directly from TMDB movie and TV search, then filtered for usable posters and ranked by relevance, popularity, vote strength, and release match quality.</div>
+    <div class="discover-grid" id="discover-search-grid"></div>
+    <button class="discover-expand-btn" data-discover-target="discover-search-grid" onclick="toggleDiscoverSection('discover-search-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section" id="friend-activity-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title activity-title-link" onclick="openActivityPage()">Friend Activity <span class="activity-title-chevron">→</span></div>
+    </div>
+    <div class="discover-section-desc">Recent additions and ratings from your friends in the last 7 days</div>
+    <div id="friend-activity-feed">
+      <div class="discover-message">Open Discover to load friend activity.</div>
+    </div>
+  </div>
+
+  <div class="discover-section" id="discover-movies-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Trending Movies - this week</div>
+    </div>
+    <div class="discover-grid" id="discover-movies-grid">
+      <div class="discover-message">Open Discover to load trending movies.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-movies-grid" onclick="toggleDiscoverSection('discover-movies-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section" id="discover-tv-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Trending TV Show - this week</div>
+    </div>
+    <div class="discover-grid" id="discover-tv-grid">
+      <div class="discover-message">Open Discover to load trending TV shows.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-tv-grid" onclick="toggleDiscoverSection('discover-tv-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section" id="discover-streaming-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Whats Popular - Streaming</div>
+    </div>
+    <div class="discover-grid" id="discover-streaming-grid">
+      <div class="discover-message">Open Discover to load popular streaming titles.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-streaming-grid" onclick="toggleDiscoverSection('discover-streaming-grid')">Show more</button>
+  </div>
+
+  <div class="discover-mobile-jump" aria-label="Discover section shortcuts">
+    <button class="discover-mobile-jump-btn" type="button" aria-label="Friend activity" title="Friend activity" onclick="jumpToDiscoverSection('friend-activity-section')">FA</button>
+    <button class="discover-mobile-jump-btn" type="button" aria-label="Trending movies this week" title="Trending movies this week" onclick="jumpToDiscoverSection('discover-movies-section')">MV</button>
+    <button class="discover-mobile-jump-btn" type="button" aria-label="Trending shows this week" title="Trending shows this week" onclick="jumpToDiscoverSection('discover-tv-section')">TV</button>
+    <button class="discover-mobile-jump-btn" type="button" aria-label="Popular on streaming" title="Popular on streaming" onclick="jumpToDiscoverSection('discover-streaming-section')">OS</button>
+  </div>
+</div>
+</div>
+
+<div id="games-discover-view" style="display:none">
+<div class="container main-content">
+  <div class="discover-head">
+    <div>
+      <div class="discover-title">Games Discovery</div>
+      <div class="discover-subtitle">Popular, trending, new releases, anticipated, top rated, genre-based, multiplayer, and hidden-gem picks pulled from multiple databases .</div>
+    </div>
+    <button class="btn-secondary btn-sm" onclick="loadGamesDiscover(true)">Refresh</button>
+  </div>
+
+  <div class="discover-search-row">
+    <input class="discover-search-input" id="games-discover-search-input" type="text" placeholder="Search for Games" onkeydown="handleDiscoverSearchKey(event, 'rawg')">
+    <button class="btn-primary btn-sm" onclick="searchGamesDiscoverDatabase()">Search</button>
+    <button class="btn-secondary btn-sm" onclick="clearDiscoverDatabaseSearch('rawg')">Clear</button>
+  </div>
+
+  <div class="discover-section discover-search-section" id="games-discover-search-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Search Results</div>
+    </div>
+    <div class="discover-section-desc">Pulled directly from RAWG game search, then filtered for usable cover images and ranked by relevance, player interest, added counts, rating activity, and platform reach.</div>
+    <div class="discover-grid" id="discover-games-search-grid"></div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-search-grid" onclick="toggleDiscoverSection('discover-games-search-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Popular Games Right Now</div>
+    </div>
+    <div class="discover-section-desc">Pulled from multiple databases highest-current-interest results, prioritized by overall popularity, recent player attention, rating count, and relevance across major platforms.</div>
+    <div class="discover-grid" id="discover-games-popular-grid">
+      <div class="discover-message">Open Games Discovery to load popular games.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-popular-grid" onclick="toggleDiscoverSection('discover-games-popular-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">New & Trending Games</div>
+    </div>
+    <div class="discover-section-desc">Pulled from games released in the last 18 months, then ranked by recent popularity, strong ratings, rating count, and current discovery momentum.</div>
+    <div class="discover-grid" id="discover-games-trending-grid">
+      <div class="discover-message">Open Games Discovery to load trending games.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-trending-grid" onclick="toggleDiscoverSection('discover-games-trending-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">New Releases</div>
+    </div>
+    <div class="discover-section-desc">Pulled from games released during the current calendar month, then ranked by player interest, added counts, rating activity, major-platform reach, and clean cover availability.</div>
+    <div class="discover-grid" id="discover-games-new-releases-grid">
+      <div class="discover-message">Open Games Discovery to load new releases.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-new-releases-grid" onclick="toggleDiscoverSection('discover-games-new-releases-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Anticipated games</div>
+    </div>
+    <div class="discover-section-desc">Pulled from unreleased games dated from today through the next 2 years, then ranked by multiple databases player-interest signals, added counts, rating activity when available, major-platform reach, and poster/duplicate quality filters.</div>
+    <div class="discover-grid" id="discover-games-anticipated-grid">
+      <div class="discover-message">Open Games Discovery to load anticipated games.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-anticipated-grid" onclick="toggleDiscoverSection('discover-games-anticipated-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Top Rated Games</div>
+    </div>
+    <div class="discover-section-desc">Pulled from highly rated games, then filtered to avoid low-vote outliers by prioritizing titles with strong average ratings and a meaningful number of player ratings.</div>
+    <div class="discover-grid" id="discover-games-rated-grid">
+      <div class="discover-message">Open Games Discovery to load top rated games.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-rated-grid" onclick="toggleDiscoverSection('discover-games-rated-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Open World & Story Games</div>
+    </div>
+    <div class="discover-section-desc">Pulled from adventure, RPG, action-adventure, open-world, story-rich, and single-player related genres/tags, then ranked by rating strength, popularity, and fit for longer progress-based play.</div>
+    <div class="discover-grid" id="discover-games-story-grid">
+      <div class="discover-message">Open Games Discovery to load open world and story games.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-story-grid" onclick="toggleDiscoverSection('discover-games-story-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Multiplayer / Co-op Games</div>
+    </div>
+    <div class="discover-section-desc">Pulled from multiplayer, co-op, online co-op, competitive, PvP, and party-related tags, then ranked by popularity, player activity signals, and rating strength.</div>
+    <div class="discover-grid" id="discover-games-multiplayer-grid">
+      <div class="discover-message">Open Games Discovery to load multiplayer and co-op games.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-multiplayer-grid" onclick="toggleDiscoverSection('discover-games-multiplayer-grid')">Show more</button>
+  </div>
+
+  <div class="discover-section">
+    <div class="discover-section-top">
+      <div class="discover-section-title">Hidden Gems</div>
+    </div>
+    <div class="discover-section-desc">Pulled from lower-mainstream titles by reducing emphasis on raw popularity, then ranked by strong ratings, enough player feedback, and niche discovery value.</div>
+    <div class="discover-grid" id="discover-games-hidden-grid">
+      <div class="discover-message">Open Games Discovery to load hidden gems.</div>
+    </div>
+    <button class="discover-expand-btn" data-discover-target="discover-games-hidden-grid" onclick="toggleDiscoverSection('discover-games-hidden-grid')">Show more</button>
+  </div>
+</div>
+</div>
+
+<!-- Comments page -->
+<div id="comments-page" class="comments-page">
+<div class="container main-content">
+  <button class="comments-page-back" onclick="closeCommentsPage()">← Back</button>
+  <div id="comments-page-header"></div>
+  <div id="comments-input-area"></div>
+  <div id="comments-count"></div>
+  <div class="comments-list" id="comments-list"></div>
+</div>
+</div>
+
+<div id="activity-page" class="activity-page">
+<div class="container main-content">
+  <button class="comments-page-back" onclick="closeActivityPage()">← Back</button>
+  <div class="activity-page-header">
+    <div class="activity-page-title">Friend Activity</div>
+    <div class="activity-page-subtitle">All recent activity from friends</div>
+  </div>
+  <div id="activity-page-feed"></div>
+</div>
+</div>
+
+<!-- Private profile modal -->
+<div class="modal-overlay" id="private-modal" style="display:none" onclick="closePrivateModal()">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:380px;text-align:center;">
+    <div style="font-size:42px;margin-bottom:12px;">🔒</div>
+    <h3 style="margin-bottom:10px;">This user is private</h3>
+    <p style="color:#9990b3;font-size:14px;line-height:1.5;margin-bottom:20px;">They must accept your friend request to view their profile.</p>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn-primary" onclick="closePrivateModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="modal-title">Add TV Show</h3>
+    <div id="api-key-section">
+      <div class="api-key-row" id="api-key-input-row">
+        <input type="text" id="inp-api-key" placeholder="TMDB API key (free at themoviedb.org)">
+        <button class="btn-primary btn-sm" onclick="saveTmdbKey()">Save</button>
+      </div>
+    </div>
+    <div id="tmdb-search-area">
+      <div class="cover-search-row" style="margin-top:12px;">
+        <input type="text" id="inp-tmdb-search" placeholder="Search TMDB..." onkeydown="if(event.key==='Enter')doSearch()">
+        <button class="btn-primary btn-sm" onclick="doSearch()">🔍 Search</button>
+      </div>
+      <div id="tmdb-results"></div>
+    </div>
+    <div id="tmdb-selected-area" style="display:none;margin-top:12px;"></div>
+    <div id="modal-status-picker" class="modal-status-picker" style="display:none"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Discover Add Modal -->
+<div class="modal-overlay" id="discover-add-modal" style="display:none" onclick="closeDiscoverAddModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div id="discover-add-modal-content"></div>
+  </div>
+</div>
+
+<!-- Profile Page -->
+<div id="profile-page" class="profile-page">
+  <div class="container profile-shell">
+    <div class="profile-topbar">
+      <div class="profile-topbar-left">
+        <button class="profile-back-btn" onclick="closeProfile()">← Back</button>
+        <div>
+          <div class="profile-topbar-title">Profile Studio</div>
+          <div class="profile-topbar-sub">Customize your ScreenList home page</div>
+        </div>
+      </div>
+      <div class="profile-topbar-actions">
+        <button class="profile-share-btn" onclick="shareProfile()" title="Share profile"><span>↗</span><span>Share Profile</span></button>
+        <button class="profile-save-btn" onclick="saveProfile()">Save Profile</button>
+      </div>
+    </div>
+
+    <div class="profile-hero-card">
+      <div class="profile-hero-inner">
+        <div class="profile-avatar-panel">
+          <img class="profile-page-avatar" id="profile-preview" src="" alt="Profile picture">
+          <div class="profile-avatar-actions">
+            <label class="profile-mini-btn" style="cursor:pointer;">
+              Upload
+              <input type="file" accept="image/*" id="profile-file" onchange="handleProfileUpload(this)" style="display:none;">
+            </label>
+            <button class="profile-mini-btn" onclick="toggleProfilePhotoUrl()">Photo URL</button>
+          </div>
+        </div>
+        <div class="profile-main-fields">
+          <div class="profile-eyebrow">Your ScreenList home</div>
+          <input type="text" id="profile-name" class="profile-name-input" placeholder="Nickname">
+          <textarea id="profile-bio" class="profile-bio-input" maxlength="220" placeholder="Write a short bio — favorite genres, what you are watching, your gaming vibe, or anything you want people to know."></textarea>
+          <div id="profile-url-row" class="profile-url-inline">
+            <input type="url" id="profile-photo" placeholder="Photo URL" oninput="previewProfilePhoto(this.value)">
+          </div>
+          <div class="theme-toggle-row profile-theme-row">
+            <span class="theme-toggle-label">Appearance</span>
+            <div class="theme-switch">
+              <span>🌙 Dark</span>
+              <label class="toggle-track">
+                <input type="checkbox" id="theme-toggle-inp" onchange="toggleTheme(this.checked)">
+                <span class="toggle-thumb"></span>
+              </label>
+              <span>☀️ Light</span>
+            </div>
+          </div>
+          <div class="profile-mobile-links-zone" id="profile-mobile-links-zone">
+            <div class="profile-mobile-links-line" aria-hidden="true"></div>
+            <div class="profile-mobile-links-grid" id="profile-mobile-links-grid"></div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-stats-grid" id="profile-stats-grid"></div>
+    </div>
+
+    <div class="profile-section-card profile-favorites-card">
+      <div class="profile-section-head">
+        <div>
+          <div class="profile-section-title">Profile Showcase</div>
+          <div class="profile-section-sub">Top 3 overall media first, then movies, TV shows, anime, games, characters, actors, directors, and musical artists. Each row stays 3 across.</div>
+        </div>
+      </div>
+      <div class="profile-favorites-grid profile-showcase-grid" id="profile-favorites-grid"></div>
+    </div>
+
+    <div class="profile-section-card profile-links-card">
+      <div class="profile-section-head">
+        <div>
+          <div class="profile-section-title">Linked Profiles</div>
+          <div class="profile-section-sub">Add the profiles you want people to open from your ScreenList page.</div>
+        </div>
+      </div>
+      <div class="profile-links-grid" id="profile-links-grid"></div>
+    </div>
+  </div>
+</div>
+
+
+</div> <!-- end app-container -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>

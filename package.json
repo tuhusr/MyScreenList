@@ -1,0 +1,19 @@
+{
+  "name": "myscreenlist-capacitor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Capacitor wrapper for ScreenList iOS publishing.",
+  "scripts": {
+    "cap:sync": "npx cap sync",
+    "cap:copy": "npx cap copy",
+    "ios:add": "npx cap add ios",
+    "ios:open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  }
+}

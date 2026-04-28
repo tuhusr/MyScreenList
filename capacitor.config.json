@@ -1,0 +1,18 @@
+{
+  "appId": "dev.koomgaming.screenlist",
+  "appName": "ScreenList",
+  "webDir": "capacitor-web",
+  "server": {
+    "url": "https://watchlist.koomgaming.workers.dev",
+    "cleartext": false,
+    "iosScheme": "https",
+    "allowNavigation": [
+      "watchlist.koomgaming.workers.dev",
+      "*.googleapis.com",
+      "*.gstatic.com",
+      "*.firebaseapp.com",
+      "*.googleusercontent.com",
+      "ui-avatars.com"
+    ]
+  }
+}
